@@ -14,14 +14,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Product.init({
-    paranoid: true,
     name: DataTypes.STRING,
     price: DataTypes.STRING,
     image: DataTypes.STRING,
-    status_id: DataTypes.INTEGER
+    status_id: DataTypes.INTEGER,
+    createdAt: {
+      field: 'created_at',
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+        field: 'updated_at',
+        type: DataTypes.DATE,
+    },
+    deletedAt: {
+      field: 'deleted_at',
+      type: DataTypes.DATE,
+  },
+    
   }, {
     sequelize,
     modelName: 'products',
+    paranoid: true,
   });
   return Product;
 };
