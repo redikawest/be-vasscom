@@ -1,4 +1,4 @@
-const { body, param } = require('express-validator');
+const { body, param, query } = require('express-validator');
 
 const createUserValidation = [
     body('name').notEmpty().withMessage('Name is required'),
@@ -22,7 +22,8 @@ const detailUserValidation = [
 ];
 
 const listUserValidation = [
-
+    query('take').notEmpty().withMessage('take is required'),
+    query('skip').notEmpty().withMessage('skip is required'),
 ];
 
 module.exports = { 

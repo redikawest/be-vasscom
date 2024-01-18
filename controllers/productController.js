@@ -5,14 +5,38 @@ const Product = require('../models').products;
 
 const list = async (req, res) => {
     
-    const products = await Product.findAll();
+    const { skip = 1, take = 10 } = req.query;
     
-    return successResponse(res, "Success", products);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return errorResponse(res, "validation Error", 400, errors.array())
+    }
+
+    try {
+
+        const offset = (skip - 1) * take;
+
+        const products = await Product.findAll({
+            offset,
+            limit: parseInt(take, 10),
+            order: [['id', 'DESC']],
+        });
+    
+        return successResponse(res, "Success", products);
+
+    } catch (error) {
+        console.error('Error:', error);
+        return errorResponse(res, "Error retrieving product list!", 500);
+    }
 };
 
 const detail = async (req, res) => {
 
     const { productId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return errorResponse(res, "validation Error", 400, errors.array())
+    }
 
     try {
 
@@ -35,7 +59,7 @@ const create = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {
@@ -62,7 +86,7 @@ const update = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {
@@ -93,7 +117,7 @@ const deleteProduct = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {

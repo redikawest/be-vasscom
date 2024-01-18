@@ -5,9 +5,23 @@ const { STATUS_ACTIVE, ROLE_USER } = require("../helpers/constant");
 const bcrypt = require('bcrypt');
 
 const list = async (req, res) => {
+
+    const { skip = 1, take = 10 } = req.query;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return errorResponse(res, "validation Error", 400, errors.array())
+    }
+
     try {
 
-        const users = await User.findAll();
+        const offset = (skip - 1) * take;
+
+        const users = await User.findAll({
+            offset,
+            limit: parseInt(take, 10),
+            order: [['id', 'DESC']],
+        });
     
         return successResponse(res, "Success", users);
         
@@ -20,6 +34,10 @@ const list = async (req, res) => {
 const detail = async (req, res) => {
 
     const { userId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return errorResponse(res, "validation Error", 400, errors.array())
+    }
 
     try {
 
@@ -42,7 +60,7 @@ const create = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {
@@ -69,7 +87,7 @@ const update = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {
@@ -98,7 +116,7 @@ const deleteUser = async (req, res) => {
     const { userId } = req.params;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return errorResponse(res, "validation Error", 400, errors.array())
+        return errorResponse(res, "validation Error", 400, errors.array())
     }
 
     try {
