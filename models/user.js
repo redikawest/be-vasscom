@@ -14,15 +14,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    paranoid: true,
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     phone_number: DataTypes.STRING,
     password: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN,
     status_id: DataTypes.INTEGER,
     role_id: DataTypes.INTEGER,
+    createdAt: {
+      field: 'created_at',
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+        field: 'updated_at',
+        type: DataTypes.DATE,
+    },
+    deletedAt: {
+      field: 'deleted_at',
+      type: DataTypes.DATE,
+    },
   }, {
+    paranoid: true,
     sequelize,
     modelName: 'users',
   });
